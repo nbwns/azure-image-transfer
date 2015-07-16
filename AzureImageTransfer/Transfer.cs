@@ -60,8 +60,9 @@ namespace AzureImageTransfer
             container = blobClient.GetContainerReference(ContainerName);
         }
         
-        public void Transfer(string imageUrl, string blobName) 
+        public string Transfer(string imageUrl, string blobName) 
         {
+            string azureUri = null;
             if (string.IsNullOrEmpty(imageUrl))
             {
                 throw new ArgumentNullException("imageUrl");
@@ -86,7 +87,11 @@ namespace AzureImageTransfer
                 {
                     blockBlob.UploadFromStream(imageStream);
                 }
+
+                azureUri = container.Uri.AbsoluteUri + "/" + blobName;
             }
+
+            return azureUri;
         }
 
         public Stream DownloadRemoteImageFile(string uri)
